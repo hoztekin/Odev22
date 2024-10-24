@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Odev22": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

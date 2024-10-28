@@ -1,61 +1,71 @@
-﻿namespace Odev22
+﻿using System.Diagnostics;
+
+namespace Odev22
 {
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
-			try
-			{
-				string alphabet;
-				// Alfabeyi al
-				Console.Write("Alfabeyi giriniz S={ ");
-				alphabet = Console.ReadLine().Trim().TrimEnd('}');
-				var symbols = alphabet.Split(',').Select(s => s.Trim()[0]).ToList();
+			string step = string.Empty;
 
-				// Alfabeyi kontrol et
-				if (!symbols.Contains('a') || !symbols.Contains('b'))
+			do
+			{
+				try
 				{
-					Console.WriteLine("Hata: Alfabe a ve b sembollerini içermelidir!");
-					return;
+					string alphabet;
+					// Alfabeyi al
+					Console.Write("Alfabeyi giriniz S={ ");
+					alphabet = Console.ReadLine().Trim().TrimEnd('}');
+					var symbols = alphabet.Split(',').Select(s => s.Trim()[0]).ToList();
+
+					// Alfabeyi kontrol et
+					if (!symbols.Contains('a') || !symbols.Contains('b'))
+					{
+						Console.WriteLine("Hata: Alfabe a ve b sembollerini içermelidir!");
+						return;
+					}
+
+					Console.Write("Düzenli ifadeyi giriniz: ");
+					string regex = Console.ReadLine().Replace(" ", "");
+
+					// Düzenli ifadeyi kontrol et
+					if (!IsValidRegex(regex, symbols))
+					{
+						Console.WriteLine("Hata: Düzenli ifade verilen alfabeden üretilemez!");
+						return;
+					}
+
+					Console.Write("L dilinin kaç kelimesini görmek istiyorsunuz? : ");
+					int count = int.Parse(Console.ReadLine());
+
+					Console.WriteLine("\nDüzenli ifade S alfabesinden üretilebilir. Kelimeleriniz listeleniyor..");
+
+					// Kelimeleri üret
+					var words = GenerateWords(regex, count);
+					Console.WriteLine($"L={{{string.Join(",", words)}}}");
+
+					// Bonus: Kelime kontrolü
+					Console.Write("\nBONUS: Kontrol edilecek kelimeyi giriniz: ");
+					string wordToCheck = Console.ReadLine();
+
+					bool belongs = CheckWord(regex, wordToCheck);
+					Console.WriteLine(belongs
+						? "Bu kelime L diline aittir."
+						: "Bu kelime L diline ait değildir.");
+
+					Console.WriteLine("Çıkış için: 1  Tekrar işlem yapmak için: 2");
+					step = Console.ReadLine();					
+					Thread.Sleep(1000);
+					Console.Clear();
 				}
 
-				Console.Write("Düzenli ifadeyi giriniz: ");
-				string regex = Console.ReadLine().Replace(" ", "");
-
-				// Düzenli ifadeyi kontrol et
-				if (!IsValidRegex(regex, symbols))
+				catch (Exception ex)
 				{
-					Console.WriteLine("Hata: Düzenli ifade verilen alfabeden üretilemez!");
-					return;
+					Console.WriteLine($"Bir hata oluştu: {ex.Message}");
+					Console.ReadLine();
 				}
-
-				Console.Write("L dilinin kaç kelimesini görmek istiyorsunuz? : ");
-				int count = int.Parse(Console.ReadLine());
-
-				Console.WriteLine("\nDüzenli ifade S alfabesinden üretilebilir. Kelimeleriniz listeleniyor..");
-
-				// Kelimeleri üret
-				var words = GenerateWords(regex, count);
-				Console.WriteLine($"L={{{string.Join(",", words)}}}");
-
-				// Bonus: Kelime kontrolü
-				Console.Write("\nBONUS: Kontrol edilecek kelimeyi giriniz: ");
-				string wordToCheck = Console.ReadLine();
-
-				bool belongs = CheckWord(regex, wordToCheck);
-				Console.WriteLine(belongs
-					? "Bu kelime L diline aittir."
-					: "Bu kelime L diline ait değildir.");
-
-				Console.ReadLine();
-
-			}
-
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Bir hata oluştu: {ex.Message}");
-				Console.ReadLine();
-			}
+			} while (step!= "1");
+			
 		}
 
 
